@@ -30,6 +30,25 @@ const handelBookStoreController = async (req, res) => {
     }
 };
 
+const handelBookListController = async (req, res) => {
+    try {
+        const bookList = await book.find({})
+        return res
+            .status(200)
+            .json({
+                message: "All books fetched successfuly",
+                Success: true,
+                TotalCount: bookList.length,
+                bookList: bookList
+            });
+    } catch (error) {
+        return res
+            .status(400)
+            .json({ message: error.message, Success: false });
+    }
+}
+
 module.exports = {
     handelBookStoreController,
+    handelBookListController
 };
