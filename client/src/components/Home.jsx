@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { bookBaseUrl } from "../../axiosInstance";
 
 function Home() {
@@ -9,7 +9,23 @@ function Home() {
         SellingPrice: "",
         publishDate: "",
     });
+    const [bookList, setBookList] = useState([])
     console.log("book form", bookForm);
+
+    const getAllBookList = async () => {
+        try {
+            const { data } = await bookBaseUrl.get('booklists')
+            console.log('bookList ', data)
+            setBookList(data?.bookList)
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    useEffect(() => {
+        getAllBookList()
+    }, [])
+
 
     const handelFormChange = (e) => {
         const { name, value } = e.target;
@@ -139,13 +155,20 @@ function Home() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            <tr className="hover:bg-gray-200">
-                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
-                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
-                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
-                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
-                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
-                            </tr>
+                            {
+                                bookList.map((book, index) => {
+                                    return (
+                                        <tr className="hover:bg-gray-200" key={index}>
+                                            <td className="px-6 py-3 whitespace-nowrap">{book?.bookName}</td>
+                                            <td className="px-6 py-3 whitespace-nowrap">{book?.bookTitle}</td>
+                                            <td className="px-6 py-3 whitespace-nowrap">{book?.Author}</td>
+                                            <td className="px-6 py-3 whitespace-nowrap">{book?.SellingPrice}</td>
+                                            <td className="px-6 py-3 whitespace-nowrap">{book?.publishDate}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+
                         </tbody>
                     </table>
                 </div>
