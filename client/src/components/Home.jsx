@@ -152,6 +152,9 @@ function Home() {
                                 <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                     Publish date
                                 </th>
+                                 <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -164,6 +167,7 @@ function Home() {
                                             <td className="px-6 py-3 whitespace-nowrap">{book?.Author}</td>
                                             <td className="px-6 py-3 whitespace-nowrap">{book?.SellingPrice}</td>
                                             <td className="px-6 py-3 whitespace-nowrap">{book?.publishDate}</td>
+                                            <td className="px-6 py-3 whitespace-nowrap">Action</td>
                                         </tr>
                                     )
                                 })
