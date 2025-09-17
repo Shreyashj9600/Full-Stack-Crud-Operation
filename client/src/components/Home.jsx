@@ -1,61 +1,157 @@
-import React from 'react'
+import React, { useState } from "react";
+import { bookBaseUrl } from "../../axiosInstance";
 
 function Home() {
+    const [bookForm, setBookForm] = useState({
+        bookName: "",
+        bookTitle: "",
+        Author: "",
+        SellingPrice: "",
+        publishDate: "",
+    });
+    console.log("book form", bookForm);
+
+    const handelFormChange = (e) => {
+        const { name, value } = e.target;
+        setBookForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handelSubmit = async () => {
+        try {
+            if (
+                !bookForm.bookName ||
+                !bookForm.bookTitle ||
+                !bookForm.Author ||
+                !bookForm.SellingPrice
+            ) {
+                alert("All field's are requiured");
+            }
+            const data = await bookBaseUrl.post("/addbook", bookForm);
+            if (data?.data.message) {
+                alert(data?.data.message);
+                setBookForm({
+                    bookName: "",
+                    bookTitle: "",
+                    Author: "",
+                    SellingPrice: "",
+                    publishDate: "",
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
-        <div className='w-full px-5 min-h-[calc(100vh-60px)]'>
-            <div className='w-full grid grid-cols-5 gap-3 my-4'>
-                <div className='w-full flex flex-col gap-2'>
-                    <label htmlFor=''>Book Name</label>
-                    <input type='text' placeholder='book name' className='w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2' />
+        // input section
+        <div className="w-full px-5 min-h-[calc(100vh-60px)]">
+            <div className="w-full grid grid-cols-5 gap-3 my-4">
+                <div className="w-full flex flex-col gap-2">
+                    <label htmlFor="">Book Name</label>
+                    <input
+                        type="text"
+                        placeholder="book name"
+                        className="w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2"
+                        name="bookName"
+                        value={bookForm.bookName}
+                        onChange={handelFormChange}
+                    />
                 </div>
-                <div className='w-full flex flex-col gap-2'>
-                    <label htmlFor=''>Book Title</label>
-                    <input type='text' placeholder='book Title' className='w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2' />
+                <div className="w-full flex flex-col gap-2">
+                    <label htmlFor="">Book Title</label>
+                    <input
+                        type="text"
+                        placeholder="book Title"
+                        className="w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2"
+                        name="bookTitle"
+                        value={bookForm.bookTitle}
+                        onChange={handelFormChange}
+                    />
                 </div>
-                <div className='w-full flex flex-col gap-2'>
-                    <label htmlFor=''>Author</label>
-                    <input type='text' placeholder='Author' className='w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2' />
+                <div className="w-full flex flex-col gap-2">
+                    <label htmlFor="">Author</label>
+                    <input
+                        type="text"
+                        placeholder="Author"
+                        className="w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2"
+                        name="Author"
+                        value={bookForm.Author}
+                        onChange={handelFormChange}
+                    />
                 </div>
-                <div className='w-full flex flex-col gap-2'>
-                    <label htmlFor=''>Selling Price</label>
-                    <input type='text' placeholder='selling price' className='w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2' />
+                <div className="w-full flex flex-col gap-2">
+                    <label htmlFor="">Selling Price</label>
+                    <input
+                        type="text"
+                        placeholder="selling price"
+                        className="w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2"
+                        name="SellingPrice"
+                        value={bookForm.SellingPrice}
+                        onChange={handelFormChange}
+                    />
                 </div>
-                <div className='w-full flex flex-col gap-2'>
-                    <label htmlFor=''>Publish date</label>
-                    <input type='date' placeholder='Publish date' className='w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2' />
+                <div className="w-full flex flex-col gap-2">
+                    <label htmlFor="">Publish date</label>
+                    <input
+                        type="date"
+                        placeholder="Publish date"
+                        className="w-full border-2 border-gray-500 text-gray-800 rounded-sm outline-none h-8 px-2"
+                        name="publishDate"
+                        value={bookForm.publishDate}
+                        onChange={handelFormChange}
+                    />
                 </div>
             </div>
 
-            <div className='w-full flex justify-end'>
-                <button className='bg-gray-500 text-white h-9 w-22 rounded-md cursor-pointer'>Submit</button>
+            <div className="w-full flex justify-end">
+                <button
+                    className="bg-gray-500 text-white h-9 w-22 rounded-md cursor-pointer"
+                    onClick={handelSubmit}
+                >
+                    Submit
+                </button>
             </div>
 
-            <div className='w-full mt-10'>
-                <div className='w-full'>
-                    <table className='w-full bg-white divide-y divide-gray-200'>
-                        <thead className='bg-gray-50'>
+            {/* tabel section */}
+            <div className="w-full mt-10">
+                <div className="w-full">
+                    <table className="w-full bg-white divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
                             <tr>
-                                <th className='tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>Book Name</th>
-                                <th className='tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>Book Title</th>
-                                <th className='tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>Author</th>
-                                <th className='tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>selling price</th>
-                                <th className='tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase'>Publish date</th>
+                                <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Book Name
+                                </th>
+                                <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Book Title
+                                </th>
+                                <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Author
+                                </th>
+                                <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    selling price
+                                </th>
+                                <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                    Publish date
+                                </th>
                             </tr>
                         </thead>
-                        <tbody className='bg-white divide-y divide-gray-200'>
-                            <tr className='hover:bg-gray-200'>
-                                <td className='px-6 py-3 whitespace-nowrap'>Name</td>
-                                <td className='px-6 py-3 whitespace-nowrap'>Name</td>
-                                <td className='px-6 py-3 whitespace-nowrap'>Name</td>
-                                <td className='px-6 py-3 whitespace-nowrap'>Name</td>
-                                <td className='px-6 py-3 whitespace-nowrap'>Name</td>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            <tr className="hover:bg-gray-200">
+                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
+                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
+                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
+                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
+                                <td className="px-6 py-3 whitespace-nowrap">Name</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Home
+export default Home;
