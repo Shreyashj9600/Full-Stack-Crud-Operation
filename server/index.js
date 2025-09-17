@@ -6,6 +6,8 @@ const bookRouter = require('./routes/book.router.js')
 //database connection
 dataBaseConnection()
 
+app.use(express.json())
+
 app.get('/' , (req,res) => {
     res.send('hello world !')
 })
