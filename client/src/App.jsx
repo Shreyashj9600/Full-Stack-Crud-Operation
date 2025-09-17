@@ -1,11 +1,14 @@
- import React from "react";
+import React from "react";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
 
- const App = () => {
-  return(
+const App = () => {
+  return (
     <>
-      <h1 className="bg-red-500">hello</h1>
+      <Navbar />
+      <Home />
     </>
   )
- }
+}
 
- export default App
+export default App
