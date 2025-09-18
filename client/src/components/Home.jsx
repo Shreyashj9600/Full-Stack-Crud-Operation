@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { bookBaseUrl } from "../../axiosInstance";
+import { MdDelete } from "react-icons/md";
+import { FaPen } from "react-icons/fa";
 
 function Home() {
     const [bookForm, setBookForm] = useState({
@@ -9,23 +11,22 @@ function Home() {
         SellingPrice: "",
         publishDate: "",
     });
-    const [bookList, setBookList] = useState([])
-    console.log("book form", bookForm);
+    const [bookList, setBookList] = useState([]);
+    // console.log("book form", bookForm);
 
     const getAllBookList = async () => {
         try {
-            const { data } = await bookBaseUrl.get('booklists')
-            console.log('bookList ', data)
-            setBookList(data?.bookList)
+            const { data } = await bookBaseUrl.get("booklists");
+            console.log("bookList ", data);
+            setBookList(data?.bookList);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
     useEffect(() => {
-        getAllBookList()
-    }, [])
-
+        getAllBookList();
+    }, []);
 
     const handelFormChange = (e) => {
         const { name, value } = e.target;
@@ -48,17 +49,33 @@ function Home() {
             const data = await bookBaseUrl.post("/addbook", bookForm);
             if (data?.data.message) {
                 alert(data?.data.message);
+                getAllBookList()
                 setBookForm({
                     bookName: "",
                     bookTitle: "",
                     Author: "",
                     SellingPrice: "",
                     publishDate: "",
-                })
+                });
             }
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const handelDelete = async (id) => {
+        try {
+            const data = await bookBaseUrl.post('deletebook', {
+                Id: id,
+            })
+            if (data?.Success) {
+                // alert(data?.message)
+                getAllBookList();
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
     };
 
     return (
@@ -152,27 +169,51 @@ function Home() {
                                 <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                     Publish date
                                 </th>
-                                 <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                <th className="tracking-wide px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                     Action
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {
-                                bookList.map((book, index) => {
-                                    return (
-                                        <tr className="hover:bg-gray-200" key={index}>
-                                            <td className="px-6 py-3 whitespace-nowrap">{book?.bookName}</td>
-                                            <td className="px-6 py-3 whitespace-nowrap">{book?.bookTitle}</td>
-                                            <td className="px-6 py-3 whitespace-nowrap">{book?.Author}</td>
-                                            <td className="px-6 py-3 whitespace-nowrap">{book?.SellingPrice}</td>
-                                            <td className="px-6 py-3 whitespace-nowrap">{book?.publishDate}</td>
-                                            <td className="px-6 py-3 whitespace-nowrap">Action</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-
+                            {bookList.map((book, index) => {
+                                {/* console.log("find all data present in book" , book._id) */ }
+                                return (
+                                    <tr className="hover:bg-gray-200" key={index}>
+                                        <td className="px-6 py-3 whitespace-nowrap">
+                                            {book?.bookName}
+                                        </td>
+                                        <td className="px-6 py-3 whitespace-nowrap">
+                                            {book?.bookTitle}
+                                        </td>
+                                        <td className="px-6 py-3 whitespace-nowrap">
+                                            {book?.Author}
+                                        </td>
+                                        <td className="px-6 py-3 whitespace-nowrap">
+                                            {book?.SellingPrice}
+                                        </td>
+                                        <td className="px-6 py-3 whitespace-nowrap">
+                                            {book?.publishDate}
+                                        </td>
+                                        <td className="px-6 py-3 whitespace-nowrap">
+                                            <div className="w-20 flex justify-center gap-5">
+                                                <div
+                                                    className="h-8 w-8 flex justify-center items-center bg-red-100 text-red-600 cursor-pointer"
+                                                    onClick={() => handelDelete(book._id)}
+                                                >
+                                                    <span>
+                                                        <MdDelete />
+                                                    </span>
+                                                </div>
+                                                <div className="h-8 w-8 flex justify-center items-center bg-green-100 text-green-600 cursor-pointer">
+                                                    <span>
+                                                        <FaPen />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
