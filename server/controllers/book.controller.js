@@ -33,7 +33,7 @@ const handelBookStoreController = async (req, res) => {
 const handelBookListController = async (req, res) => {
     try {
         const bookList = await book.find({})
-        
+
         return res
             .status(200)
             .json({
@@ -49,7 +49,25 @@ const handelBookListController = async (req, res) => {
     }
 }
 
+const handelBookDeleteController = async (req, res) => {
+    const body = req.body;
+    try {
+        const deleted = await book.deleteOne({ _id: body.Id })
+        console.log("deleted", deleted)
+        if (deleted.acknowledged) {
+            return res
+                .json({
+                    message: "Book Deleted successfuly",
+                    Success: true,
+                });
+        }
+    } catch (error) {
+        return res.status(400).json({ message: error.message, Success: false });
+    }
+}
+
 module.exports = {
     handelBookStoreController,
-    handelBookListController
+    handelBookListController,
+    handelBookDeleteController
 };
