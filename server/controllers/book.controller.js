@@ -66,8 +66,24 @@ const handelBookDeleteController = async (req, res) => {
     }
 }
 
+const handelBookUpdateController = async (req, res) => {
+    try {
+        const body = req.body;
+        const updating = await book.updateOne({ _id: body?._id }, { $set: body })
+        if (updating.acknowledged) {
+            return res.json({
+                message: "book updated successfully !",
+                Success: true
+            })
+        }
+    } catch (error) {
+        return res.status(400).json({ msg: error.message, Success: false })
+    }
+}
+
 module.exports = {
     handelBookStoreController,
     handelBookListController,
-    handelBookDeleteController
+    handelBookDeleteController,
+    handelBookUpdateController
 };

@@ -3,6 +3,7 @@ const {
     handelBookStoreController,
     handelBookListController,
     handelBookDeleteController,
+    handelBookUpdateController,
 } = require("../controllers/book.controller");
 
 const router = express.Router();
@@ -11,5 +12,6 @@ const router = express.Router();
 router.post("/addbook", handelBookStoreController);
 router.get("/booklists", handelBookListController);
 router.post("/deletebook", handelBookDeleteController);
+router.put("/updatebook", handelBookUpdateController);
 
 module.exports = router;
