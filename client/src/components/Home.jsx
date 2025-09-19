@@ -10,10 +10,10 @@ function Home() {
         Author: "",
         SellingPrice: "",
         publishDate: "",
+        Id: ""
     });
     const [bookList, setBookList] = useState([]);
-    // console.log("book form", bookForm);
-
+    const [isUpdating, setIsUpdating] = useState(false)
     const getAllBookList = async () => {
         try {
             const { data } = await bookBaseUrl.get("booklists");
@@ -38,25 +38,44 @@ function Home() {
 
     const handelSubmit = async () => {
         try {
-            if (
-                !bookForm.bookName ||
-                !bookForm.bookTitle ||
-                !bookForm.Author ||
-                !bookForm.SellingPrice
-            ) {
-                alert("All field's are requiured");
-            }
-            const data = await bookBaseUrl.post("/addbook", bookForm);
-            if (data?.data.message) {
-                alert(data?.data.message);
-                getAllBookList()
-                setBookForm({
-                    bookName: "",
-                    bookTitle: "",
-                    Author: "",
-                    SellingPrice: "",
-                    publishDate: "",
-                });
+            if (!isUpdating) {
+
+                if (
+                    !bookForm.bookName ||
+                    !bookForm.bookTitle ||
+                    !bookForm.Author ||
+                    !bookForm.SellingPrice
+                ) {
+                    alert("All field's are requiured");
+                }
+                const data = await bookBaseUrl.post("/addbook", bookForm);
+                if (data?.data.message) {
+                    alert(data?.data.message);
+                    getAllBookList()
+                    setBookForm({
+                        bookName: "",
+                        bookTitle: "",
+                        Author: "",
+                        SellingPrice: "",
+                        publishDate: "",
+                        Id: ""
+                    });
+                    setIsUpdating(false)
+                }
+            } else {
+                const data = await bookBaseUrl.put("/updatebook", bookForm);
+                if (data?.data.message) {
+                    alert(data?.data.message);
+                    getAllBookList()
+                    setBookForm({
+                        bookName: "",
+                        bookTitle: "",
+                        Author: "",
+                        SellingPrice: "",
+                        publishDate: "",
+                        Id: ""
+                    });
+                }
             }
         } catch (error) {
             console.log(error);
@@ -68,7 +87,7 @@ function Home() {
             const data = await bookBaseUrl.post('deletebook', {
                 Id: id,
             })
-            if (data?.Success) {
+            if (data?.data?.Success) {
                 // alert(data?.message)
                 getAllBookList();
             }
@@ -77,6 +96,20 @@ function Home() {
         }
 
     };
+
+    const handelUpdate = (data) => {
+        setBookForm(
+            {
+                bookName: data?.bookName,
+                bookTitle: data?.bookTitle,
+                Author: data?.Author,
+                SellingPrice: data?.SellingPrice,
+                publishDate: data?.publishDate,
+                Id: data?._id
+            }
+        )
+        setIsUpdating(true)
+    }
 
     return (
         // input section
@@ -204,7 +237,9 @@ function Home() {
                                                         <MdDelete />
                                                     </span>
                                                 </div>
-                                                <div className="h-8 w-8 flex justify-center items-center bg-green-100 text-green-600 cursor-pointer">
+                                                <div className="h-8 w-8 flex justify-center items-center bg-green-100 text-green-600 cursor-pointer"
+                                                    onClick={() => handelUpdate(book)}
+                                                >
                                                     <span>
                                                         <FaPen />
                                                     </span>
